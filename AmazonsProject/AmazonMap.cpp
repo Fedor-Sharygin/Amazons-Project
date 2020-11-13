@@ -25,11 +25,21 @@ AmazonMap::AmazonMap(int nWidth, int nHeight)
 /// 1st - where can the node in this cell move to
 /// 2nd - what nodes can the node block from here
 /// </summary>
-/// <param name="row"></param>
-/// <param name="col"></param>
-/// <returns></returns>
+/// <param name="row">
+/// row of the cell from which we are checking the visibility
+/// </param>
+/// <param name="col">
+/// column of the cell from which we are checking the visibility
+/// </param>
+/// <returns>
+/// vector of cell positions which can be reached from the row-col cell
+/// </returns>
 std::vector<std::pair<int, int>> AmazonMap::VisibleCellsFromHere(int row, int col)
 {
+	std::vector<std::pair<int, int>> filler;
 
+
+
+	return filler;
 }
 
