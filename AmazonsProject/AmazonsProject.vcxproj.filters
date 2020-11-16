@@ -21,9 +21,15 @@
     <ClCompile Include="AmazonMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AmazonsAI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AmazonMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AmazonsAI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

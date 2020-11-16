@@ -6,6 +6,10 @@
 #include <algorithm>
 
 
+#include "AmazonMap.h"
+#include "AmazonsAI.h"
+
+
 
 int main(int argc, char** argv)
 {
