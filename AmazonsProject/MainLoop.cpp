@@ -20,6 +20,8 @@ void PlayerMakeMove(AmazonMap* map)
 	int stR, stC, moR, moC, blR, blC;
 	position start, move, block;
 
+	std::cout << "Enter cell positions: (row, col) (top-bottom, left-right)" << std::endl << std::endl;
+
 	std::cout << "Please, enter the position of the piece you want to move (enter (row, col))" << std::endl;
 	EnterNumToChar(std::cin, stR, ',');
 	EnterNumToChar(std::cin, stC, ')');
@@ -65,8 +67,6 @@ int main(int argc, char** argv)
 	
 	AmazonsAI* black = nullptr;
 	AmazonsAI* white = nullptr;
-
-	std::map<PlayerColor, AmazonsAI*> ai = { { PlayerColor::BLACK, black }, { PlayerColor::WHITE, white } };
 
 	if (0 != compNum)
 	{
@@ -131,6 +131,8 @@ int main(int argc, char** argv)
 		}
 	}
 
+	std::map<PlayerColor, AmazonsAI*> ai = { { PlayerColor::BLACK, black }, { PlayerColor::WHITE, white } };
+
 	std::string fName;
 	std::cout << "Please, enter the name of the text file with the map:" << std::endl;
 	std::cin >> fName;
@@ -140,6 +142,15 @@ int main(int argc, char** argv)
 	fileContents.assign( (std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()) );
 
 	AmazonMap mainMap(fileContents);
+
+	if (nullptr != black)
+	{
+		black->PassTheMap(&mainMap);
+	}
+	if (nullptr != white)
+	{
+		white->PassTheMap(&mainMap);
+	}
 
 	while (0 != mainMap.GetScope(mainMap.GetCurrentPlayer()))
 	{
@@ -156,6 +167,8 @@ int main(int argc, char** argv)
 		{
 			player->MakeBestMove();
 		}
+
+		std::cout << mainMap;
 	}
 
 	PlayerColor lastPlayer = mainMap.GetCurrentPlayer();

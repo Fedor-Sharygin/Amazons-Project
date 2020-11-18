@@ -19,8 +19,8 @@ AmazonsAI::~AmazonsAI()
 std::tuple<position, position, position> AmazonsAI::BestMove()
 {
 	PlayerColor otherPlayer = (PlayerColor::BLACK == this->player) ? PlayerColor::WHITE : PlayerColor::BLACK ;
-	std::set<position> mPositions = currentMap->playerPositions[this->player];
-	const std::set<position>& oPositions = currentMap->playerPositions[otherPlayer];
+	std::vector<position> mPositions = currentMap->playerPositions[this->player];
+	const std::vector<position>& oPositions = currentMap->playerPositions[otherPlayer];
 
 	///		 Opponent scope		 My scope		move:	   start	 end	   block
 	std::map<int,		std::map<int,			std::tuple<position, position, position>>> minMax;
@@ -29,13 +29,13 @@ std::tuple<position, position, position> AmazonsAI::BestMove()
 
 	for (auto& st : mPositions)
 	{
-		std::set<position> posMoves = currentMap->VisibleCellsFromHere(st);
+		std::vector<position> posMoves = currentMap->VisibleCellsFromHere(st);
 
 		for (auto& mo : posMoves)
 		{
 			AmazonMap copy(*currentMap);
 			copy.MakeTheMove(std::tuple(st, mo));
-			std::set<position> posBlocks = copy.VisibleCellsFromHere(mo);
+			std::vector<position> posBlocks = copy.VisibleCellsFromHere(mo);
 
 			for (auto& bl : posBlocks)
 			{

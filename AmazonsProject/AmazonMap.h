@@ -10,11 +10,20 @@
 #include <ostream>
 #include <cstdio>
 #include <fstream>
-
+#include <string>
+#include <sstream>
 
 
 template<typename T>
-void EnterNumToChar(T& instream, int& num, const char c = '\0');
+void EnterNumToChar(T& instream, int& num, const char c = '\0')
+{
+	std::string nn;
+	instream.ignore();
+	std::getline(instream, nn, c);
+
+	std::stringstream ss(nn);
+	ss >> num;
+}
 
 
 enum class CellStatus
@@ -40,8 +49,8 @@ public:
 	AmazonMap(const AmazonMap& lhs);
 	AmazonMap(std::string textMap);
 
-	std::set<position> VisibleCellsFromHere(position mP);
-	std::set<position> VisibleCellsFromHere(int row, int col);
+	std::vector<position> VisibleCellsFromHere(position mP);
+	std::vector<position> VisibleCellsFromHere(int row, int col);
 	void SwitchPlayer();
 
 	void MakeTheMove(std::tuple<position, position> nMove);
@@ -56,7 +65,7 @@ public:
 
 	PlayerColor GetCurrentPlayer();
 public:
-	std::map<PlayerColor, std::set<position>> playerPositions;
+	std::map<PlayerColor, std::vector<position>> playerPositions;
 	static std::map<CellStatus, PlayerColor> coherence;
 	static std::map<PlayerColor, CellStatus> swCoherence;
 private:
