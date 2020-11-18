@@ -3,10 +3,11 @@
 #include <climits>
 
 
-AmazonsAI::AmazonsAI(PlayerColor mColor)
+AmazonsAI::AmazonsAI(PlayerColor mColor, bool nStrategy)
 	:
 	currentMap(nullptr),
-	player(mColor)
+	player(mColor),
+	strategy(nStrategy)
 {}
 
 AmazonsAI::~AmazonsAI()
@@ -21,32 +22,52 @@ std::tuple<position, position, position> AmazonsAI::BestMove()
 	std::set<position> mPositions = currentMap->playerPositions[this->player];
 	const std::set<position>& oPositions = currentMap->playerPositions[otherPlayer];
 
-	position bestStart	(-1, -1);
-	position bestMove	(-1, -1);
-	position bestBlock	(-1, -1);
-
-	int myMaxRange = INT_MIN;
-	int otherMinRange = INT_MAX;
-
-	AmazonMap copy(*currentMap);
+	///		 Opponent scope		 My scope		move:	   start	 end	   block
+	std::map<int,		std::map<int,			std::tuple<position, position, position>>> minMax;
+	///		 My scope			 Opponent scope		move:	   start	 end	   block
+	std::map<int,		std::map<int,				std::tuple<position, position, position>>> maxMin;
 
 	for (auto& st : mPositions)
 	{
-		std::vector<position> posMoves = currentMap->VisibleCellsFromHere(st);
+		std::set<position> posMoves = currentMap->VisibleCellsFromHere(st);
 
 		for (auto& mo : posMoves)
 		{
-			
-			std::vector<position> posBlocks = copy.VisibleCellsFromHere(mo);
+			AmazonMap copy(*currentMap);
+			copy.MakeTheMove(std::tuple(st, mo));
+			std::set<position> posBlocks = copy.VisibleCellsFromHere(mo);
 
 			for (auto& bl : posBlocks)
 			{
+				copy.Block(bl);
+				
+				int mScope = copy.GetScope(this->player);
+				int oScope = copy.GetScope(otherPlayer);
 
+				minMax[oScope][mScope] = std::tuple(st, mo, bl);
+				minMax[mScope][oScope] = std::tuple(st, mo, bl);
 			}
 		}
 	}
 
-	return std::tuple(bestStart, bestMove, bestBlock);
+	/// Choose based on the strategy
+	/// min op scope / max my scope
+	/// max my scope / min op scope
+
+	std::tuple<position, position, position> res;
+
+	/// min/max
+	if (true == strategy)
+	{
+		res = minMax.begin()->second.rbegin()->second;
+	}
+	/// max/min
+	else
+	{
+		res = maxMin.begin()->second.rbegin()->second;
+	}
+
+	return res;
 }
 
 
@@ -55,4 +76,13 @@ void AmazonsAI::PassTheMap(AmazonMap* nMap)
 	currentMap = nMap;
 }
 
+
+void AmazonsAI::MakeBestMove()
+{
+	auto [st, mo, bl] = this->BestMove();
+
+	currentMap->MakeTheMove(std::tuple(st, mo));
+	currentMap->Block(bl);
+	currentMap->SwitchPlayer();
+}
 

@@ -1,5 +1,24 @@
 #include "AmazonMap.h"
 
+#include <string>
+#include <cstdio>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
+
+template<typename T>
+void EnterNumToChar(T& instream, int& num, const char c)
+{
+	std::string nn;
+	instream.ignore();
+	std::getline(instream, nn, c);
+
+	std::stringstream ss(nn);
+	ss >> num;
+}
+
+
 
 std::map<CellStatus, PlayerColor> AmazonMap::coherence =
 {
@@ -18,7 +37,8 @@ std::map<PlayerColor, CellStatus> AmazonMap::swCoherence =
 AmazonMap::AmazonMap(int nWidth, int nHeight, PlayerColor nPM)
 	:
 	width(nWidth), height(nHeight),
-	currentPlayerMove(nPM)
+	currentPlayerMove(nPM),
+	lastMove(-1, -1)
 {
 	map = new CellStatus*[height];
 	for (int i = 0; i < height; ++i)
@@ -34,7 +54,8 @@ AmazonMap::AmazonMap(int nWidth, int nHeight, PlayerColor nPM)
 AmazonMap::AmazonMap(const AmazonMap& lhs)
 	:
 	width(lhs.width), height(lhs.height),
-	currentPlayerMove(lhs.currentPlayerMove)
+	currentPlayerMove(lhs.currentPlayerMove),
+	lastMove(lhs.lastMove)
 {
 	map = new CellStatus * [height];
 	for (int i = 0; i < height; ++i)
@@ -65,9 +86,9 @@ AmazonMap::AmazonMap(const AmazonMap& lhs)
 /// <returns>
 /// vector of cell positions which can be reached from the row-col cell
 /// </returns>
-std::vector<std::pair<int, int>> AmazonMap::VisibleCellsFromHere(int row, int col)
+std::set<position> AmazonMap::VisibleCellsFromHere(int row, int col)
 {
-	std::vector<std::pair<int, int>> filler;
+	std::set<position> filler;
 
 	/// if a previous cell was is not in the list
 	/// then get don't put this cell in
@@ -93,7 +114,7 @@ std::vector<std::pair<int, int>> AmazonMap::VisibleCellsFromHere(int row, int co
 			break;
 		}
 
-		filler.push_back(std::make_pair(row, nCol));
+		filler.insert(std::make_pair(row, nCol));
 	}
 
 	for (int layer = 0; layer < rightLayers; ++layer)
@@ -104,7 +125,7 @@ std::vector<std::pair<int, int>> AmazonMap::VisibleCellsFromHere(int row, int co
 			break;
 		}
 
-		filler.push_back(std::make_pair(row, nCol));
+		filler.insert(std::make_pair(row, nCol));
 	}
 
 
@@ -118,7 +139,7 @@ std::vector<std::pair<int, int>> AmazonMap::VisibleCellsFromHere(int row, int co
 			break;
 		}
 
-		filler.push_back(std::make_pair(nRow, col));
+		filler.insert(std::make_pair(nRow, col));
 	}
 
 	for (int layer = 0; layer < bottomLayers; ++layer)
@@ -129,7 +150,7 @@ std::vector<std::pair<int, int>> AmazonMap::VisibleCellsFromHere(int row, int co
 			break;
 		}
 
-		filler.push_back(std::make_pair(nRow, col));
+		filler.insert(std::make_pair(nRow, col));
 	}
 
 
@@ -144,7 +165,7 @@ std::vector<std::pair<int, int>> AmazonMap::VisibleCellsFromHere(int row, int co
 			break;
 		}
 
-		filler.push_back(std::make_pair(nRow, nCol));
+		filler.insert(std::make_pair(nRow, nCol));
 	}
 
 	for (int layer = 0; layer < topLeftLayers; ++layer)
@@ -156,7 +177,7 @@ std::vector<std::pair<int, int>> AmazonMap::VisibleCellsFromHere(int row, int co
 			break;
 		}
 
-		filler.push_back(std::make_pair(nRow, nCol));
+		filler.insert(std::make_pair(nRow, nCol));
 	}
 
 	for (int layer = 0; layer < bottomRightLayers; ++layer)
@@ -168,7 +189,7 @@ std::vector<std::pair<int, int>> AmazonMap::VisibleCellsFromHere(int row, int co
 			break;
 		}
 
-		filler.push_back(std::make_pair(nRow, nCol));
+		filler.insert(std::make_pair(nRow, nCol));
 	}
 
 	for (int layer = 0; layer < topRightLayers; ++layer)
@@ -180,7 +201,7 @@ std::vector<std::pair<int, int>> AmazonMap::VisibleCellsFromHere(int row, int co
 			break;
 		}
 
-		filler.push_back(std::make_pair(nRow, nCol));
+		filler.insert(std::make_pair(nRow, nCol));
 	}
 
 
@@ -188,7 +209,7 @@ std::vector<std::pair<int, int>> AmazonMap::VisibleCellsFromHere(int row, int co
 }
 
 
-std::vector<std::pair<int, int>> AmazonMap::VisibleCellsFromHere(position mP)
+std::set<position> AmazonMap::VisibleCellsFromHere(position mP)
 {
 	return this->VisibleCellsFromHere(mP.first, mP.second);
 }
@@ -207,36 +228,22 @@ void AmazonMap::SwitchPlayer()
 }
 
 
-void AmazonMap::UpdatePlayerPositions()
+void AmazonMap::MakeTheMove(std::tuple<position, position> nMove)
 {
-	for (auto [_, posSet] : playerPositions)
-	{
-		posSet.clear();
-	}
-
-	for (int cRow = 0; cRow < this->height; ++cRow)
-	{
-		for (int cCol = 0; cCol < this->width; ++cCol)
-		{
-			const CellStatus& curStatus = this->map[cRow][cCol];
-			if (CellStatus::EMPTY != curStatus && CellStatus::BLOCKED != curStatus)
-			{
-				playerPositions[coherence[curStatus]].insert(position(cRow, cCol));
-			}
-		}
-	}
-}
-
-
-void AmazonMap::MakeTheMove(std::tuple<position, position, position> nMove)
-{
-	auto [start, move, block] = nMove;
+	auto [start, move] = nMove;
 
 	this->map[move.first][move.second] = this->map[start.first][start.second];
 	this->map[start.first][start.second] = CellStatus::EMPTY;
-	this->map[block.first][block.second] = CellStatus::BLOCKED;
+
+	playerPositions[currentPlayerMove].erase(start);
+	playerPositions[currentPlayerMove].insert(move);
 
 	this->SwitchPlayer();
+}
+
+void AmazonMap::Block(position nBlock)
+{
+	this->map[nBlock.first][nBlock.second] = CellStatus::BLOCKED;
 }
 
 
@@ -261,10 +268,9 @@ std::ostream& operator<<(std::ostream& out, const AmazonMap& am)
 		for (int cCol = 0; cCol < w; ++cCol)
 		{
 			CellStatus cCell = am.map[cRow][cCol];
-			out << '\t';
 			if (CellStatus::EMPTY == cCell)
 			{
-				out << '*';
+				out << '-';
 			}
 			if (CellStatus::BLOCKED == cCell)
 			{
@@ -283,5 +289,112 @@ std::ostream& operator<<(std::ostream& out, const AmazonMap& am)
 	}
 	
 	return out;
+}
+
+
+
+int AmazonMap::GetScope(PlayerColor nCol)
+{
+	std::set<position> scope;
+	for (auto& blPiece : playerPositions[nCol])
+	{
+		std::set<position> visPos = this->VisibleCellsFromHere(blPiece);
+		scope.insert(visPos.begin(), visPos.end());
+	}
+
+	return scope.size();
+}
+
+
+///	width = val, height = val
+///	player = player color
+/// the map
+AmazonMap::AmazonMap(std::string textMap)
+	:
+	lastMove(-1, -1)
+{
+	if (true == textMap.empty())
+	{
+		std::cout << "ERROR: empty text passed" << std::endl;
+		exit(-1);
+	}
+
+	std::stringstream ss(textMap);
+	std::string store;
+
+	std::vector<std::string> lines;
+
+	while (std::getline(ss, store, '\n'))
+	{
+		lines.push_back(store);
+	}
+
+	std::stringstream sizeStream(lines[0]);
+	int nWidth;
+	sizeStream.ignore(10, ' ');
+	sizeStream.ignore(2);
+	EnterNumToChar(sizeStream, nWidth, ',');
+	width = nWidth;
+
+	int nHeight;
+	sizeStream.ignore(10, ' ');
+	sizeStream.ignore(2);
+	EnterNumToChar(sizeStream, nHeight);
+	height = nHeight;
+
+
+	map = new CellStatus*[height];
+	for (int i = 0; i < height; ++i)
+	{
+		map[i] = new CellStatus[width];
+	}
+
+
+	std::stringstream plStream(lines[1]);
+	std::string ncName;
+	PlayerColor nCol;
+	plStream.ignore(10, ' ');
+	plStream.ignore(2);
+	plStream >> ncName;
+	if (0 == ncName.compare("black"))
+	{
+		nCol = PlayerColor::BLACK;
+	}
+	if (0 == ncName.compare("white"))
+	{
+		nCol = PlayerColor::WHITE;
+	}
+	currentPlayerMove = nCol;
+	for (int i = 2; i < lines.size(); ++i)
+	{
+		for (int c = 0; c < width; ++c)
+		{
+			char ch = lines[i][c];
+
+			if ('-' == ch)
+			{
+				map[i - 2][c] = CellStatus::EMPTY;
+			}
+			if ('X' == ch)
+			{
+				map[i - 2][c] = CellStatus::BLOCKED;
+			}
+			if ('B' == ch)
+			{
+				map[i - 2][c] = CellStatus::BLACK;
+			}
+			if ('W' == ch)
+			{
+				map[i - 2][c] = CellStatus::WHITE;
+			}
+		}
+	}
+}
+
+
+
+PlayerColor AmazonMap::GetCurrentPlayer()
+{
+	return currentPlayerMove;
 }
 

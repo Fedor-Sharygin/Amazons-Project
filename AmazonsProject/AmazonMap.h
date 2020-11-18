@@ -9,6 +9,12 @@
 #include <iostream>
 #include <ostream>
 #include <cstdio>
+#include <fstream>
+
+
+
+template<typename T>
+void EnterNumToChar(T& instream, int& num, const char c = '\0');
 
 
 enum class CellStatus
@@ -32,18 +38,23 @@ class AmazonMap
 public:
 	AmazonMap(int nWidth, int nHeight, PlayerColor nPM = PlayerColor::BLACK);
 	AmazonMap(const AmazonMap& lhs);
+	AmazonMap(std::string textMap);
 
-	std::vector<position> VisibleCellsFromHere(position mP);
-	std::vector<position> VisibleCellsFromHere(int row, int col);
+	std::set<position> VisibleCellsFromHere(position mP);
+	std::set<position> VisibleCellsFromHere(int row, int col);
 	void SwitchPlayer();
-	void UpdatePlayerPositions();
 
-	void MakeTheMove(std::tuple<position, position, position> nMove);
+	void MakeTheMove(std::tuple<position, position> nMove);
+	void Block(position nBlock);
 
 	friend std::ostream& operator<<(std::ostream& out, const AmazonMap& am);
 
 	const int& GetHeight() const;
 	const int& GetWidth() const;
+
+	int GetScope(PlayerColor nCol);
+
+	PlayerColor GetCurrentPlayer();
 public:
 	std::map<PlayerColor, std::set<position>> playerPositions;
 	static std::map<CellStatus, PlayerColor> coherence;
@@ -54,6 +65,7 @@ private:
 	CellStatus** map;
 
 	PlayerColor currentPlayerMove;
+	position lastMove;
 };
 
 

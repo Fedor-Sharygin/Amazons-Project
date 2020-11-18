@@ -11,7 +11,8 @@
 class AmazonsAI
 {
 public:
-	AmazonsAI(PlayerColor mColor);
+	///									default = min/max
+	AmazonsAI(PlayerColor mColor, bool nStrategy = true);
 	~AmazonsAI();
 
 	/// <summary>
@@ -24,12 +25,18 @@ public:
 	std::tuple<position, position, position> BestMove();
 
 	void PassTheMap(AmazonMap* nMap);
+
+	void MakeBestMove();
 public:
 private:
 private:
 	AmazonMap* currentMap;
 
 	PlayerColor player;
+
+	/// true	-	min/max
+	///	false	-	max/min
+	bool strategy;
 };
 
 
