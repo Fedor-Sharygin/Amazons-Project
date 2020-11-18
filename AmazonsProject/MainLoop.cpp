@@ -170,6 +170,8 @@ int main(int argc, char** argv)
 	}
 	std::cout << " won!" << std::endl;
 
+	std::system("pause");
+
 	return 0;
 }
 
