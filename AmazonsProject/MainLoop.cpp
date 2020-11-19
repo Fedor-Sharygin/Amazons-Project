@@ -154,6 +154,10 @@ int main(int argc, char** argv)
 
 	while (0 != mainMap.GetScope(mainMap.GetCurrentPlayer()))
 	{
+		std::cout << mainMap;
+
+		std::system("pause");
+
 		AmazonsAI* player = ai[mainMap.GetCurrentPlayer()];
 
 		/// if current player is nullptr
@@ -167,9 +171,9 @@ int main(int argc, char** argv)
 		{
 			player->MakeBestMove();
 		}
-
-		std::cout << mainMap;
 	}
+
+	std::cout << mainMap;
 
 	PlayerColor lastPlayer = mainMap.GetCurrentPlayer();
 

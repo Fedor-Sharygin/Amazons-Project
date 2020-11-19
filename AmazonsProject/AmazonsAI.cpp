@@ -45,7 +45,7 @@ std::tuple<position, position, position> AmazonsAI::BestMove()
 				int oScope = copy.GetScope(otherPlayer);
 
 				minMax[oScope][mScope] = std::tuple(st, mo, bl);
-				minMax[mScope][oScope] = std::tuple(st, mo, bl);
+				maxMin[mScope][oScope] = std::tuple(st, mo, bl);
 			}
 		}
 	}
@@ -64,7 +64,7 @@ std::tuple<position, position, position> AmazonsAI::BestMove()
 	/// max/min
 	else
 	{
-		res = maxMin.begin()->second.rbegin()->second;
+		res = maxMin.rbegin()->second.begin()->second;
 	}
 
 	return res;
