@@ -37,7 +37,8 @@ enum class CellStatus
 enum class PlayerColor
 {
 	BLACK,	/// 1st player --- b(L)ue/black
-	WHITE	/// 2nd player --- (R)ed/white
+	WHITE,	/// 2nd player --- (R)ed/white
+	UNDEFINED	/// for OPT check
 };
 
 using position = std::pair<int, int>;
@@ -53,7 +54,7 @@ public:
 	std::vector<position> VisibleCellsFromHere(int row, int col);
 	void SwitchPlayer();
 
-	void MakeTheMove(std::tuple<position, position> nMove);
+	void MakeTheMove(std::tuple<position, position> nMove, PlayerColor forOPT = PlayerColor::UNDEFINED);
 	void Block(position nBlock);
 
 	friend std::ostream& operator<<(std::ostream& out, const AmazonMap& am);
@@ -64,6 +65,9 @@ public:
 	int GetScope(PlayerColor nCol);
 
 	PlayerColor GetCurrentPlayer();
+
+//	int GameTreeHeight();											/// yellow XD
+//	std::tuple<position, position, position> GetOptimalMove(PlayerColor pColor);
 public:
 	std::map<PlayerColor, std::vector<position>> playerPositions;
 	static std::map<CellStatus, PlayerColor> coherence;
@@ -71,7 +75,7 @@ public:
 private:
 private:
 	int width, height;
-	CellStatus** map;
+	std::map<int, std::map<int, CellStatus>> map;
 
 	PlayerColor currentPlayerMove;
 	position lastMove;

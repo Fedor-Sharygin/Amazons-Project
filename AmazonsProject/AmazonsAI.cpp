@@ -1,5 +1,7 @@
 #include "AmazonsAI.h"
 
+#include "OPT.h"
+
 #include <climits>
 
 
@@ -18,14 +20,27 @@ AmazonsAI::~AmazonsAI()
 
 std::tuple<position, position, position> AmazonsAI::BestMove()
 {
+	/// Create the optimal play tree
+	/// if it's finished => choose the best move from here
+	OPT* optPl = new OPT(*currentMap, 3);
+	if (true == optPl->finished)
+	{
+		return optPl->BestMove(this->player);
+	}
+
+	/// Choose based on the strategy
+	/// min op scope / max my scope
+	/// max my scope / min op scope
+
+	std::tuple<position, position, position> res;
 	PlayerColor otherPlayer = (PlayerColor::BLACK == this->player) ? PlayerColor::WHITE : PlayerColor::BLACK ;
 	std::vector<position> mPositions = currentMap->playerPositions[this->player];
 	const std::vector<position>& oPositions = currentMap->playerPositions[otherPlayer];
 
 	///		 Opponent scope		 My scope		move:	   start	 end	   block
-	std::map<int,		std::map<int,			std::tuple<position, position, position>>> minMax;
+	std::map<int, std::map<int, std::tuple<position, position, position>>> minMax;
 	///		 My scope			 Opponent scope		move:	   start	 end	   block
-	std::map<int,		std::map<int,				std::tuple<position, position, position>>> maxMin;
+	std::map<int, std::map<int, std::tuple<position, position, position>>> maxMin;
 
 	for (auto& st : mPositions)
 	{
@@ -40,7 +55,7 @@ std::tuple<position, position, position> AmazonsAI::BestMove()
 			for (auto& bl : posBlocks)
 			{
 				copy.Block(bl);
-				
+
 				int mScope = copy.GetScope(this->player);
 				int oScope = copy.GetScope(otherPlayer);
 
@@ -49,12 +64,6 @@ std::tuple<position, position, position> AmazonsAI::BestMove()
 			}
 		}
 	}
-
-	/// Choose based on the strategy
-	/// min op scope / max my scope
-	/// max my scope / min op scope
-
-	std::tuple<position, position, position> res;
 
 	/// min/max
 	if (true == strategy)

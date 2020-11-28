@@ -31,10 +31,8 @@ AmazonMap::AmazonMap(int nWidth, int nHeight, PlayerColor nPM)
 	currentPlayerMove(nPM),
 	lastMove(-1, -1)
 {
-	map = new CellStatus*[height];
 	for (int i = 0; i < height; ++i)
 	{
-		map[i] = new CellStatus[width];
 		for (int j = 0; j < width; ++j)
 		{
 			map[i][j] = CellStatus::EMPTY;
@@ -49,13 +47,11 @@ AmazonMap::AmazonMap(const AmazonMap& lhs)
 	lastMove(lhs.lastMove),
 	playerPositions(lhs.playerPositions)
 {
-	map = new CellStatus * [height];
 	for (int i = 0; i < height; ++i)
 	{
-		map[i] = new CellStatus[width];
 		for (int j = 0; j < width; ++j)
 		{
-			map[i][j] = lhs.map[i][j];
+			map[i][j] = lhs.map.at(i).at(j);
 		}
 	}
 }
@@ -220,17 +216,26 @@ void AmazonMap::SwitchPlayer()
 }
 
 
-void AmazonMap::MakeTheMove(std::tuple<position, position> nMove)
+void AmazonMap::MakeTheMove(std::tuple<position, position> nMove, PlayerColor forOPT)
 {
+	PlayerColor forCheck;
+	if (PlayerColor::UNDEFINED == forOPT)
+	{
+		forCheck = this->currentPlayerMove;
+	}
+	else
+	{
+		forCheck = forOPT;
+	}
 	auto [start, move] = nMove;
 
 	this->map[move.first][move.second] = this->map[start.first][start.second];
 	this->map[start.first][start.second] = CellStatus::EMPTY;
 
-	auto it = std::find(playerPositions[currentPlayerMove].begin(), playerPositions[currentPlayerMove].end(), start);
+	auto it = std::find(playerPositions[forCheck].begin(), playerPositions[forCheck].end(), start);
 
-	playerPositions[currentPlayerMove].erase(it);
-	playerPositions[currentPlayerMove].push_back(move);
+	playerPositions[forCheck].erase(it);
+	playerPositions[forCheck].push_back(move);
 }
 
 void AmazonMap::Block(position nBlock)
@@ -259,7 +264,7 @@ std::ostream& operator<<(std::ostream& out, const AmazonMap& am)
 	{
 		for (int cCol = 0; cCol < w; ++cCol)
 		{
-			CellStatus cCell = am.map[cRow][cCol];
+			CellStatus cCell = am.map.at(cRow).at(cCol);
 			if (CellStatus::EMPTY == cCell)
 			{
 				out << '-';
@@ -345,13 +350,6 @@ AmazonMap::AmazonMap(std::string textMap)
 	height = nHeight;
 
 
-	map = new CellStatus*[height];
-	for (int i = 0; i < height; ++i)
-	{
-		map[i] = new CellStatus[width];
-	}
-
-
 	std::stringstream plStream(lines[1]);
 	std::string ncName;
 	PlayerColor nCol;
@@ -401,4 +399,5 @@ PlayerColor AmazonMap::GetCurrentPlayer()
 {
 	return currentPlayerMove;
 }
+
 

@@ -1,0 +1,49 @@
+﻿  AmazonMap.cpp
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\AmazonMap.cpp(225,8): error C2429: language feature 'structured bindings' requires compiler flag '/std:c++17'
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\AmazonMap.cpp(230,17): error C2672: 'std::find': no matching overloaded function found
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\AmazonMap.cpp(230,113): error C2893: Failed to specialize function template '_InIt std::find(_InIt,const _InIt,const _Ty &)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xutility(5478): message : see declaration of 'std::find'
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\AmazonMap.cpp(230,113): message : With the following template arguments:
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\AmazonMap.cpp(230,113): message : '_InIt=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>'
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\AmazonMap.cpp(230,113): message : '_Ty=unknown-type'
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\AmazonMap.cpp(232,45): error C3536: 'it': cannot be used before it is initialized
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\AmazonMap.cpp(232,45): error C2664: 'std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>> std::vector<_Ty,std::allocator<_Ty>>::erase(std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>) noexcept(<expr>)': cannot convert argument 1 from 'int' to 'std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>'
+          with
+          [
+              _Ty=position
+          ]
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\AmazonMap.cpp(232,45): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(1341,14): message : see declaration of 'std::vector<position,std::allocator<position>>::erase'
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\AmazonMap.cpp(299,21): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  AmazonsAI.cpp
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\AmazonsAI.cpp(52,31): error C2955: 'std::tuple': use of class template requires template argument list
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\tuple(203): message : see declaration of 'std::tuple'
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\AmazonsAI.cpp(52,26): error C2955: 'std::tuple': use of class template requires template argument list
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\tuple(203): message : see declaration of 'std::tuple'
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\AmazonsAI.cpp(62,35): error C2955: 'std::tuple': use of class template requires template argument list
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\tuple(203): message : see declaration of 'std::tuple'
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\AmazonsAI.cpp(63,35): error C2955: 'std::tuple': use of class template requires template argument list
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\tuple(203): message : see declaration of 'std::tuple'
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\AmazonsAI.cpp(91,8): error C2429: language feature 'structured bindings' requires compiler flag '/std:c++17'
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\AmazonsAI.cpp(93,31): error C2955: 'std::tuple': use of class template requires template argument list
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\tuple(203): message : see declaration of 'std::tuple'
+  MainLoop.cpp
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\MainLoop.cpp(35,29): error C2955: 'std::tuple': use of class template requires template argument list
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\tuple(203): message : see declaration of 'std::tuple'
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\MainLoop.cpp(35,24): error C2955: 'std::tuple': use of class template requires template argument list
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\tuple(203): message : see declaration of 'std::tuple'
+  OPT.cpp
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\OPT.cpp(36,32): error C2955: 'std::tuple': use of class template requires template argument list
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\tuple(203): message : see declaration of 'std::tuple'
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\OPT.cpp(36,27): error C2955: 'std::tuple': use of class template requires template argument list
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\tuple(203): message : see declaration of 'std::tuple'
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\OPT.cpp(43,29): error C2955: 'std::tuple': use of class template requires template argument list
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\tuple(203): message : see declaration of 'std::tuple'
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\OPT.cpp(70,27): error C2955: 'std::tuple': use of class template requires template argument list
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\tuple(203): message : see declaration of 'std::tuple'
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\OPT.cpp(77,33): error C2955: 'std::tuple': use of class template requires template argument list
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\tuple(203): message : see declaration of 'std::tuple'
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\OPT.cpp(123,23): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\OPT.cpp(125,15): error C2429: language feature 'structured bindings' requires compiler flag '/std:c++17'
+C:\Users\teldy\Documents\DigiPen\mat564\AmazonsProject\AmazonsProject\OPT.cpp(139,14): error C2429: language feature 'structured bindings' requires compiler flag '/std:c++17'
+  Generating Code...
